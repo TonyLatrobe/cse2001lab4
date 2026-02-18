@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app-v1
+  namespace: dev
+  labels:
+    app: python-app
+    version: v1
+    demo: self-healing
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: python-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: python-app
+        version: v1
+        demo: self-healing
+    spec:
+      containers:
+        - name: python-app
+          image: localhost:32000/python-ab:v1
+          imagePullPolicy: Always  # Forces Kubernetes to pull the image on each pod restart
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1

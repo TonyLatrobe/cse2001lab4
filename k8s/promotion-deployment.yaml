@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promotion-server
+  namespace: dev
+  labels:
+    app: promotion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: promotion
+  template:
+    metadata:
+      labels:
+        app: promotion
+    spec:
+      containers:
+        - name: promotion-server
+          image: localhost:32000/python-promo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000

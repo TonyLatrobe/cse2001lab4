@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app-v2
+  namespace: dev
+  labels:
+    app: python-app
+    version: v2
+    demo: canary
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: python-app
+        version: v2
+        demo: canary
+    spec:
+      dnsPolicy: ClusterFirst  # Ensure this is set to ClusterFirst
+      containers:
+      - name: python-app
+        image: localhost:32000/python-ab:v2
+        imagePullPolicy: Always  # Forces Kubernetes to pull the image on each pod restart
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 1

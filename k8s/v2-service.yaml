@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-b
+  namespace: dev
+  labels:
+    app: python-app
+    version: v2
+    demo: canary
+spec:
+  selector:
+    app: python-app
+    version: v2
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

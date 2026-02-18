@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-a
+  namespace: dev
+  labels:
+    app: python-app
+    version: v1
+    demo: self-healing
+spec:
+  selector:
+    app: python-app
+    version: v1
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ab-test-ingress-canary
+  namespace: dev
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "30"
+spec:
+  ingressClassName: public
+  rules:
+  #- host: ab-test.local #if using a DNS - but then you need to change your system host file.(remove the dash on the next line)
+   - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-b
+            port:
+              number: 80
